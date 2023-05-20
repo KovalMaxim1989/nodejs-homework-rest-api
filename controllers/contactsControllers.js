@@ -4,7 +4,8 @@ const {
   removeContactService,
   addContactService,
   updateContactService,
-} = require("../models/contactsServices");
+  updateStatusContactService,
+} = require("../services/contactsServices");
 
 const listContacts = async (req, res, next) => {
   try {
@@ -44,6 +45,19 @@ const updateContact = async (req, res, next) => {
   }
 };
 
+const updateStatusContact = async (req, res, next) => {
+  try {
+    const { contactId } = req.params;
+    const updatedContact = await updateStatusContactService(
+      contactId,
+      req.body
+    );
+    res.status(200).json(updatedContact);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const removeContact = async (req, res, next) => {
   try {
     const { contactId } = req.params;
@@ -60,4 +74,5 @@ module.exports = {
   addContact,
   updateContact,
   removeContact,
+  updateStatusContact,
 };
