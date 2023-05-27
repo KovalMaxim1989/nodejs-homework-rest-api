@@ -1,8 +1,18 @@
 const { HttpError } = require("../utils");
 const Contact = require("../models/contact");
 
-const listContactsService = async () => {
-  const contacts = await Contact.find();
+const getContactsService = async (owner, page, limit, favorite) => {
+  const skip = (page - 1) * limit;
+  const filter = { owner };
+  if (favorite === "true") {
+    filter.favorite = true;
+  } else if (favorite === "false") {
+    filter.favorite = false;
+  }
+  const contacts = await Contact.find(filter)
+    .populate("owner", "email")
+    .limit(limit)
+    .skip(skip);
   return contacts;
 };
 
@@ -54,7 +64,7 @@ const updateStatusContactService = async (contactId, body) => {
 };
 
 module.exports = {
-  listContactsService,
+  getContactsService,
   getContactByIdService,
   removeContactService,
   addContactService,
