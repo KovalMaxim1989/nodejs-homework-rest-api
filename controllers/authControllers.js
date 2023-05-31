@@ -4,6 +4,7 @@ const {
   loginService,
   logoutService,
   updateSubscriptionService,
+  uploadAvatarService,
 } = require("../services/authServices");
 
 const register = controllerWrapper(async (req, res) => {
@@ -48,10 +49,17 @@ const updateSubscription = controllerWrapper(async (req, res) => {
   res.status(200).json({ message: "subscription updated" });
 });
 
+const uploadAvatar = controllerWrapper(async (req, res) => {
+  const result = await uploadAvatarService(req);
+
+  res.status(200).json({ avatarURL: result });
+});
+
 module.exports = {
   register,
   login,
   logout,
   getCurrent,
   updateSubscription,
+  uploadAvatar,
 };
