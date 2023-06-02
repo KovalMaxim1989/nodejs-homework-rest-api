@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const gravatar = require("gravatar");
 const path = require("path");
 const fs = require("fs/promises");
+const Jimp = require("jimp");
 
 const { HttpError } = require("../utils");
 const jwt = require("jsonwebtoken");
@@ -79,6 +80,13 @@ const uploadAvatarService = async (body) => {
   const filename = `${id}_${originalname}`;
   const resultUpload = path.join(avatarDir, filename);
   await fs.rename(tempUpload, resultUpload);
+
+  (async function resize() {
+    const image = await Jimp.read(resultUpload);
+    image.resize(250, 250);
+    await image.writeAsync(resultUpload);
+  })();
+
   const avatarURL = path.join("avatars", filename);
 
   await User.findByIdAndUpdate(id, { avatarURL });
