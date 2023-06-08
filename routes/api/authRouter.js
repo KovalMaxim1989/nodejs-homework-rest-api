@@ -8,14 +8,21 @@ const {
   getCurrent,
   updateSubscription,
   uploadAvatar,
+  verifyEmail,
+  resendVerifyEmail,
 } = require("../../controllers/authControllers");
 const {
   createUserValidationSchema,
   loginValidationSchema,
   updateSubscriptionSchema,
+  verifyEmailSchema,
 } = require("../../schemas/authSchema");
 
 router.post("/register", validateBody(createUserValidationSchema), register);
+
+router.get("/verify/:verificationToken", verifyEmail);
+
+router.post("/verify", validateBody(verifyEmailSchema), resendVerifyEmail);
 
 router.post("/login", validateBody(loginValidationSchema), login);
 
